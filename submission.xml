@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Submissions>
+    <Submission Commit="d4ead9ce202327f39633f488c17b4401874fef55">
+        <Author>mencywoo</Author>
+        <Email>mencyw@indicee.com</Email>
+        <Date>Sun May 2 10:12:09 2010 -0700</Date>
+        <Comment>add fetch comment</Comment>
+        <Files>
+            <File>build-steps.xml</File>
+        </Files>
+    </Submission>
+    <Submission Commit="34a908ff7bf669298d139fc59cb02f8586263838">
+        <Author>Doug Janzen</Author>
+        <Email>dougj@indicee.com</Email>
+        <Date>Fri Apr 30 15:08:30 2010 -0700</Date>
+        <Comment>Merge branch 'master' of github.com:indicee/BuildFramework</Comment>
+    </Submission>
+    <Submission Commit="2ef5887071b257cf72eb8a3efb32014047cc51e3">
+        <Author>Doug Janzen</Author>
+        <Email>dougj@indicee.com</Email>
+        <Date>Fri Apr 30 15:08:25 2010 -0700</Date>
+        <Comment>Added definition for ModelAuthoringService source jar.</Comment>
+        <Files>
+            <File>build-def-dropzone-libs.xml</File>
+        </Files>
+    </Submission>
+</Submissions>
