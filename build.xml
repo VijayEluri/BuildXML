@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project 
+	name="buildxml" 
+	basedir=".">
+
+
+	<property name="shared.3pip.dir" location="../3pip" />
+	<property name="mf.main-class" value="gitlogxml.GitSubmissionXMLCreator"/>
+
+	<path id="project.classpath"> 
+		<pathelement location="${shared.3pip.dir}/xercesImpl.jar" /> 
+	</path>
+	
+    <target name="clean">
+        <delete dir="dist"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="dist/classes"/>
+        <javac srcdir="src" destdir="dist/classes"/>
+    </target>
+
+    <target name="jar">
+    	<pathconvert property="mf.classpath" pathsep=" "> 
+    		<path refid="project.classpath" /> 
+    		<flattenmapper /> 
+    	</pathconvert>
+        <jar destfile="lib/gitlogxml.jar" basedir="dist/classes">
+            <manifest>
+                <attribute name="Main-Class" value="${mf.main-class}"/>
+				<attribute name="Class-Path" value="${mf.classpath}" />
+            </manifest>
+        </jar>
+    </target>
+	
+	
+</project>

@@ -17,6 +17,7 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xml.serialize.OutputFormat;
 
 
+
 public class GitSubmissionXMLCreator {
 
 	List<Submission> myData;
@@ -278,7 +279,11 @@ public class GitSubmissionXMLCreator {
 	
 	public static void main(String args[]) {
 		//create an instance
-		GitSubmissionXMLCreator creator = new GitSubmissionXMLCreator("C:\\Users\\Mency\\Documents\\git\\BuildXML\\src\\commit.log");
+		for(int i=0; i < args.length; i++){
+		    System.out.println( args[i] );
+		  }
+		//GitSubmissionXMLCreator creator = new GitSubmissionXMLCreator("C:\\Users\\Mency\\Documents\\git\\BuildXML\\src\\commit.log");
+		GitSubmissionXMLCreator creator = new GitSubmissionXMLCreator("/home/mencyw/git/BuildXML/commit.log");
 		//run the example
 		creator.runCreator();
 	}
