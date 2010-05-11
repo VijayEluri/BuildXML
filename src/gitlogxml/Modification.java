@@ -2,7 +2,7 @@ package gitlogxml;
 
 import java.util.*;
 
-public class Submission {
+public class Modification {
 	
 	private String commit;
 	
@@ -16,7 +16,7 @@ public class Submission {
 	
 	private Vector<String> files;
 	
-	public Submission(String commit,String author, String email, String date, String comment, Vector<String> files) {
+	public Modification(String commit,String author, String email, String date, String comment, Vector<String> files) {
 		this.commit = commit;
 		this.author = author;
 		this.email = email;

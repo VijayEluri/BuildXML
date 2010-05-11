@@ -18,9 +18,9 @@ import org.apache.xml.serialize.OutputFormat;
 
 
 
-public class GitSubmissionXMLCreator {
+public class GitModificationXMLCreator {
 
-	List<Submission> myData;
+	List<Modification> myData;
 	String filePath;
 	Document dom;
 
@@ -32,10 +32,10 @@ public class GitSubmissionXMLCreator {
 	private String strDate;
 	
 	
-	public GitSubmissionXMLCreator(String filePath) {
+	public GitModificationXMLCreator(String filePath) {
 		//create a list to hold the data
 		this.filePath=filePath;
-		myData = new ArrayList<Submission>();
+		myData = new ArrayList<Modification>();
 		//initialize private string to help create submission object
 		strCommit = new String();
 		strAuthor = new String();
@@ -47,9 +47,9 @@ public class GitSubmissionXMLCreator {
 		//initialize the list
 		loadFile(filePath);
 		
-		Iterator<Submission> it  = myData.iterator();
+		Iterator<Modification> it  = myData.iterator();
 		while(it.hasNext()) {
-			Submission item = (Submission)it.next();
+			Modification item = (Modification)it.next();
 			String result=new String(item.toString());
 			System.out.print(result);
 		}
@@ -86,13 +86,13 @@ public class GitSubmissionXMLCreator {
 	
 	private void prepareData(String strLine){
 		
-		Pattern patternCommit = Pattern.compile("^commit\\s(.*?)$");
+		Pattern patternCommit = Pattern.compile("^commit\\s(..........).*$");
 		Matcher matcherCommit = patternCommit.matcher(strLine);
 
 		Pattern patternAuthor = Pattern.compile("^Author:\\s(.*?)\\s<(.*?)>");
 		Matcher matcherAuthor = patternAuthor.matcher(strLine);
 		
-		Pattern patternDate = Pattern.compile("^Date:\\s*(.*?)$");
+		Pattern patternDate = Pattern.compile("^Date:\\s*(.*?)\\s-.*$");
 		Matcher matcherDate = patternDate.matcher(strLine);
 
 		Pattern patternComment = Pattern.compile("^\\s\\s\\s\\s(.*?)$");
@@ -148,9 +148,9 @@ public class GitSubmissionXMLCreator {
 			file_array = strFile.split(";");
 			file_vector = new Vector<String>(Arrays.asList(file_array));
 //public Submission(String commit,String author, String email, String date, String comment, Vector<String> files) 
-			myData.add(new Submission(strCommit, strAuthor, strEmail, strDate, strComment, file_vector));
+			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, file_vector));
 		} else {
-			myData.add(new Submission(strCommit, strAuthor, strEmail, strDate, strComment, null));
+			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, null));
 		}
 
 	}
@@ -184,12 +184,12 @@ public class GitSubmissionXMLCreator {
 	private void createDOMTree(){
 
 		//create the root element <Books>
-		Element rootEle = dom.createElement("Submissions");
+		Element rootEle = dom.createElement("modifications");
 		dom.appendChild(rootEle);
 
-		Iterator<Submission> it  = myData.iterator();
+		Iterator<Modification> it  = myData.iterator();
 		while(it.hasNext()) {
-			Submission item = (Submission)it.next();
+			Modification item = (Modification)it.next();
 			//For each Submission object  create <Submission> element and attach it to root
 			Element submissionEle = createSubmissionElement(item);
 			rootEle.appendChild(submissionEle);
@@ -201,46 +201,86 @@ public class GitSubmissionXMLCreator {
 	 * @param b The book for which we need to create an xml representation
 	 * @return XML element snippet representing a book
 	 */
-	private Element createSubmissionElement(Submission item){
+	private Element createSubmissionElement(Modification item){
+/*	current:
+		<Submission Commit="d4ead9ce202327f39633f488c17b4401874fef55">
+		    <Author>mencywoo</Author>
+		    <Email>mencyw@indicee.com</Email>
+		    <Date>Sun May 2 10:12:09 2010 -0700</Date>
+		    <Comment>add fetch comment</Comment>
+		    <Files>
+		        <File>build-steps.xml</File>
+		    </Files>
+		</Submission>
+	target:
+		<modifications>
+		    <modification type="git">
+		      <file action="modified">
+		        <revision>1273197760</revision>
+		        <filename>test-steps.xml</filename>
+		      </file>
+		      <date>2010-05-07T02:02:40</date>
+		      <user>mencywoo</user>
+		      <comment><![CDATA[extend the git-whatchanged usage to test chain]]></comment>
+		      <revision>1273197760</revision>
+		      <email>mencyw@indicee.com</email>
+		    </modification>
+		  </modifications>*/
 		
-		Element submissionEle = dom.createElement("Submission");
-		submissionEle.setAttribute("Commit", item.getCommit());
+		
+		Element modificationEle = dom.createElement("modification");
+		modificationEle.setAttribute("type", "git");
+		
 
-		Element authEle = dom.createElement("Author");
-		Text authText = dom.createTextNode(item.getAuthor());
-		authEle.appendChild(authText);
-		submissionEle.appendChild(authEle);
+		Element fileEle = dom.createElement("file");
+		fileEle.setAttribute("action", "modified");
+			
+			Element revisionEle = dom.createElement("revision");
+			Text revisionText = dom.createTextNode(item.getCommit());
+			revisionEle.appendChild(revisionText);
+			fileEle.appendChild(revisionEle);
+			
+			if (item.getFiles() != null) {
+				Iterator<String> itr=item.getFiles().iterator();
+				while (itr.hasNext())
+				{
+					Element filenameEle=dom.createElement("filename");
+					Text fileText = dom.createTextNode(itr.next().toString());
+					filenameEle.appendChild(fileText);
+					fileEle.appendChild(filenameEle);
+				}
+				modificationEle.appendChild(fileEle);
+			}
 
-		Element emailEle = dom.createElement("Email");
-		Text emailText = dom.createTextNode(item.getEmail());
-		emailEle.appendChild(emailText);
-		submissionEle.appendChild(emailEle);
-
-		Element dateEle = dom.createElement("Date");
+		Element dateEle = dom.createElement("date");
 		Text dateText = dom.createTextNode(item.getDate());
 		dateEle.appendChild(dateText);
-		submissionEle.appendChild(dateEle);
+		modificationEle.appendChild(dateEle);
 		
-		Element commentEle = dom.createElement("Comment");
+		Element userEle = dom.createElement("user");
+		Text authText = dom.createTextNode(item.getAuthor());
+		userEle.appendChild(authText);
+		modificationEle.appendChild(userEle);
+		
+		Element commentEle = dom.createElement("comment");
 		Text commentText = dom.createTextNode(item.getComment());
 		commentEle.appendChild(commentText);
-		submissionEle.appendChild(commentEle);
+		modificationEle.appendChild(commentEle);
 
-		Element filesEle = dom.createElement("Files");
+		Element revision2Ele = dom.createElement("revision");
+		Text revision2Text = dom.createTextNode(item.getCommit());
+		revision2Ele.appendChild(revision2Text);
+		modificationEle.appendChild(revision2Ele);
 		
-		if (item.getFiles() != null) {
-			Iterator<String> itr=item.getFiles().iterator();
-			while (itr.hasNext())
-			{
-				Element fileEle=dom.createElement("File");
-				Text fileText = dom.createTextNode(itr.next().toString());
-				fileEle.appendChild(fileText);
-				filesEle.appendChild(fileEle);
-			}
-			submissionEle.appendChild(filesEle);
-		}
+		Element emailEle = dom.createElement("email");
+		Text emailText = dom.createTextNode(item.getEmail());
+		emailEle.appendChild(emailText);
+		modificationEle.appendChild(emailEle);
+
 		
-		return submissionEle;
+
+		
+		return modificationEle;
 	}
 
 	/**
@@ -279,12 +319,12 @@ public class GitSubmissionXMLCreator {
 	
 	public static void main(String args[]) {
 		//create an instance
-		for(int i=0; i < args.length; i++){
-		    System.out.println( args[i] );
-		  }
-		//GitSubmissionXMLCreator creator = new GitSubmissionXMLCreator("C:\\Users\\Mency\\Documents\\git\\BuildXML\\src\\commit.log");
-		GitSubmissionXMLCreator creator = new GitSubmissionXMLCreator("/home/mencyw/git/BuildXML/commit.log");
-		//run the example
+		if (args.length < 1) {
+			System.out.println("Need argument on input. Abort");
+			System.exit(-1);
+		}
+		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString());
+
 		creator.runCreator();
 	}
 }
