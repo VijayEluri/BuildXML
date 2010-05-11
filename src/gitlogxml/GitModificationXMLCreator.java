@@ -201,55 +201,33 @@ public class GitModificationXMLCreator {
 	 * @param b The book for which we need to create an xml representation
 	 * @return XML element snippet representing a book
 	 */
-	private Element createSubmissionElement(Modification item){
-/*	current:
-		<Submission Commit="d4ead9ce202327f39633f488c17b4401874fef55">
-		    <Author>mencywoo</Author>
-		    <Email>mencyw@indicee.com</Email>
-		    <Date>Sun May 2 10:12:09 2010 -0700</Date>
-		    <Comment>add fetch comment</Comment>
-		    <Files>
-		        <File>build-steps.xml</File>
-		    </Files>
-		</Submission>
-	target:
-		<modifications>
-		    <modification type="git">
-		      <file action="modified">
-		        <revision>1273197760</revision>
-		        <filename>test-steps.xml</filename>
-		      </file>
-		      <date>2010-05-07T02:02:40</date>
-		      <user>mencywoo</user>
-		      <comment><![CDATA[extend the git-whatchanged usage to test chain]]></comment>
-		      <revision>1273197760</revision>
-		      <email>mencyw@indicee.com</email>
-		    </modification>
-		  </modifications>*/
-		
+	private Element createSubmissionElement(Modification item){		
 		
 		Element modificationEle = dom.createElement("modification");
 		modificationEle.setAttribute("type", "git");
 		
-
-		Element fileEle = dom.createElement("file");
-		fileEle.setAttribute("action", "modified");
-			
-			Element revisionEle = dom.createElement("revision");
-			Text revisionText = dom.createTextNode(item.getCommit());
-			revisionEle.appendChild(revisionText);
-			fileEle.appendChild(revisionEle);
+		Element fileEle;
+		Element revisionEle;
+		Element filenameEle;
+		Text revisionText;
+		Text fileText;
 			
 			if (item.getFiles() != null) {
 				Iterator<String> itr=item.getFiles().iterator();
 				while (itr.hasNext())
 				{
-					Element filenameEle=dom.createElement("filename");
-					Text fileText = dom.createTextNode(itr.next().toString());
-					filenameEle.appendChild(fileText);
-					fileEle.appendChild(filenameEle);
+					fileEle = dom.createElement("file");
+					fileEle.setAttribute("action", "modified");					
+						revisionEle = dom.createElement("revision");
+						revisionText = dom.createTextNode(item.getCommit());
+						revisionEle.appendChild(revisionText);
+					fileEle.appendChild(revisionEle);
+						filenameEle=dom.createElement("filename");
+						fileText = dom.createTextNode(itr.next().toString());
+						filenameEle.appendChild(fileText);
+					fileEle.appendChild(filenameEle);				
+					modificationEle.appendChild(fileEle);
 				}
-				modificationEle.appendChild(fileEle);
 			}
 
 		Element dateEle = dom.createElement("date");
@@ -267,10 +245,10 @@ public class GitModificationXMLCreator {
 		commentEle.appendChild(commentText);
 		modificationEle.appendChild(commentEle);
 
-		Element revision2Ele = dom.createElement("revision");
-		Text revision2Text = dom.createTextNode(item.getCommit());
-		revision2Ele.appendChild(revision2Text);
-		modificationEle.appendChild(revision2Ele);
+		revisionEle = dom.createElement("revision");
+		revisionText = dom.createTextNode(item.getCommit());
+		revisionEle.appendChild(revisionText);
+		modificationEle.appendChild(revisionEle);
 		
 		Element emailEle = dom.createElement("email");
 		Text emailText = dom.createTextNode(item.getEmail());
