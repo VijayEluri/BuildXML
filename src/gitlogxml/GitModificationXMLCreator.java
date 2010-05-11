@@ -287,7 +287,7 @@ public class GitModificationXMLCreator {
 	 * This method uses Xerces specific classes
 	 * prints the XML document to file.
      */
-	private void printToFile(){
+	private void printToFile(String outputXML){
 
 		try
 		{
@@ -300,7 +300,7 @@ public class GitModificationXMLCreator {
 
 			//to generate a file output use fileoutputstream instead of system.out
 			XMLSerializer serializer = new XMLSerializer(
-			new FileOutputStream(new File("submission.xml")), format);
+			new FileOutputStream(new File(outputXML)), format);
 
 			serializer.serialize(dom);
 
@@ -309,23 +309,23 @@ public class GitModificationXMLCreator {
 		}
 	}
 
-	public void runCreator(){
+	public void runCreator(String outputXML){
 		System.out.println("Started .. ");
 		createDOMTree();
-		printToFile();
+		printToFile(outputXML);
 		System.out.println("Generated file successfully.");
 	}
 
 	
 	public static void main(String args[]) {
 		//create an instance
-		if (args.length < 1) {
-			System.out.println("Need argument on input. Abort");
+		if (args.length < 2) {
+			System.out.println("Need argument on input and output. Abort");
 			System.exit(-1);
 		}
 		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString());
-
-		creator.runCreator();
+		
+		creator.runCreator(args[1].toString());
 	}
 }
 
