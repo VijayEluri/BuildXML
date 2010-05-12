@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project 
-	name="buildxml" 
+	name="gitlogxml" 
 	basedir=".">
 
 
-	<property name="shared.3pip.dir" location="../3pip" />
+	<property name="shared.3pip.dir" location="../../../3pip" />
 	<property name="mf.main-class" value="gitlogxml.GitModificationXMLCreator"/>
 
 	<path id="project.classpath"> 
@@ -17,7 +17,7 @@
 
     <target name="compile">
         <mkdir dir="dist/classes"/>
-        <javac srcdir="src" destdir="dist/classes"/>
+        <javac srcdir="." destdir="dist/classes"/>
     </target>
 
     <target name="jar">
@@ -25,7 +25,7 @@
     		<path refid="project.classpath" /> 
     		<flattenmapper /> 
     	</pathconvert>
-        <jar destfile="lib/gitlogxml.jar" basedir="dist/classes">
+        <jar destfile="../../lib/gitlogxml.jar" basedir="dist/classes">
             <manifest>
                 <attribute name="Main-Class" value="${mf.main-class}"/>
 				<attribute name="Class-Path" value="${mf.classpath}" />

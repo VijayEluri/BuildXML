@@ -301,6 +301,8 @@ public class GitModificationXMLCreator {
 			System.out.println("Need argument on input and output. Abort");
 			System.exit(-1);
 		}
+		String userTimezone = System.getProperty("user.timezone");
+		System.out.println("user.timezone is"+userTimezone);
 		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString());
 		
 		creator.runCreator(args[1].toString());

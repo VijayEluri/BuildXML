@@ -1,102 +1,86 @@
 package buildincr;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.io.InputStreamReader;
 import java.util.regex.*;
 
 public class BuildNumberIncr {
 
 	private String propertyFilePath;
-	private String fullVersion;
-	private boolean isNightly;
+	private String currentVersion;
+	private String nextNightlyVersion;
+	private String nextIncrVersion;
+	
+	private String versionSeparator = ".";
+	private String sectionSeparator = "_";
 
-	public BuildNumberIncr(String filePath, String strIsNightly) {
+	int majorVer;
+	int minorVer;
+	int currentNightlyVer;
+	int currentIncrVer;
+
+	String parameter;
+	
+	public BuildNumberIncr(String currVersion, String filePath) {
 		propertyFilePath = filePath;		
-		isNightly = Boolean.parseBoolean(strIsNightly);
+		currentVersion = currVersion;
 	}
 	
 	public String getPropertyFilePath() {
 		return this.propertyFilePath;
 	}
 	
-	public String getFullVersion() {
-		return this.fullVersion;
+	public String getCurrentVersion() {
+		return this.currentVersion;
 	}
 	
-	public boolean getIsNightlyBuild() {
-		return this.isNightly;
+	public String getNextNightlyVersion() {
+		return this.nextNightlyVersion;
 	}
 	
-	private void loadPropertyFile(String filePath){
-			try{
-		    // command line parameter
-		    FileInputStream fstream = new FileInputStream(filePath);
-		    // Get the object of DataInputStream
-		    DataInputStream in = new DataInputStream(fstream);
-		    BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		    
-		    String strLine;
-		    //Read File Line By Line
-		    while ((strLine = br.readLine()) != null)   {
-		      // Print the content on the console
-		    	if (strLine.length() > 0) {
-			      fullVersion = strLine;
-		    	}
-		    }	
-		    
-		   
-		    }catch (Exception e){//Catch exception if any
-		      System.err.println("Error: " + e.getMessage());
-		    }
+	public String getNextIncrVersion() {
+		return this.nextIncrVersion;
 	}
 	
-	private void incrementVersion(String strVersion, boolean isNightlyBuild) {
-		int majorVer;
-		int minorVer;
-		int nightlyVer;
-		int incrVer;
-		
-		Pattern patternFullVersion = Pattern.compile("(\\d+).(\\d+).(\\d+).(\\d+)");
-		Matcher matcherFullVersion = patternFullVersion.matcher(strVersion);
-		
-		if (matcherFullVersion.find()) {
-			majorVer = Integer.parseInt(matcherFullVersion.group(1));			
-			minorVer = Integer.parseInt(matcherFullVersion.group(2));
-			nightlyVer = Integer.parseInt(matcherFullVersion.group(3));			
-			incrVer = Integer.parseInt(matcherFullVersion.group(4));
-		} else {
-			System.out.println("Build Version does not meet expectation. Abort");
-			return;
-		}
-		
-		if (isNightlyBuild) {
-			nightlyVer++;
-			incrVer = 0;
-		} else {
-			incrVer++;
-		}
-		
-		this.fullVersion = new String(majorVer + "." + minorVer + "." + nightlyVer + "." + incrVer);
+	
+	private void incrementVersion() {
+		int nextNightlyNightly;
+		int nextIncrIncr;
 
-		System.out.print("Old version:" + strVersion + "\nNew Version:" + this.fullVersion + "\nNightly Build:" + this.isNightly );
+		Pattern patternCurrentVersion = Pattern.compile("(\\d+).(\\d+)_(\\d+).(\\d+)");
+		Matcher matcherCurrentVersion = patternCurrentVersion.matcher(this.currentVersion);
+        if (matcherCurrentVersion.find()) {
+			majorVer = Integer.parseInt(matcherCurrentVersion.group(1));
+			minorVer = Integer.parseInt(matcherCurrentVersion.group(2));
+			currentNightlyVer = Integer.parseInt(matcherCurrentVersion.group(3));
+			currentIncrVer = Integer.parseInt(matcherCurrentVersion.group(4));
+ 	    } else {
+ 	    	System.out.println("Format of Current Version is incorrect.  Abort");
+ 	    	return;
+ 	    }
+        
+        nextNightlyNightly = currentNightlyVer + 1;
+        nextIncrIncr = currentIncrVer + 1;
+ 	    	
+        this.nextNightlyVersion = new String (majorVer + versionSeparator + minorVer + sectionSeparator + nextNightlyNightly  + versionSeparator + "0" );
+        this.nextIncrVersion = new String (majorVer + versionSeparator + minorVer + sectionSeparator + currentNightlyVer  + versionSeparator + nextIncrIncr );
+        
+		System.out.println("Current version:" + this.currentVersion);
+		System.out.println("Next Nightly Version:" + this.nextNightlyVersion);
+		System.out.println("Next Incr Version:" + this.nextIncrVersion );
 	}
 	
-
 	private void printToPropertyFile(String filePath){
-
         FileOutputStream out; // declare a file output object
         PrintStream p; // declare a print stream object
-
         try
         {
                 out = new FileOutputStream(filePath);
                 // Connect print stream to the output stream
                 p = new PrintStream( out );
-                p.println (getFullVersion());
+                p.println ("current.version=" + getCurrentVersion());
+                p.println ("next.nightly.version=" + getNextNightlyVersion());
+                p.println ("next.incremental.version=" + getNextIncrVersion());
                 p.close();
         }
         catch (Exception e)
@@ -107,8 +91,9 @@ public class BuildNumberIncr {
 	
 	
 	public void runIncrement() {
-		loadPropertyFile(getPropertyFilePath());
-		incrementVersion(getFullVersion(), getIsNightlyBuild());
+	
+		incrementVersion();
+		
 		printToPropertyFile(getPropertyFilePath());
 		
 	}
@@ -116,8 +101,8 @@ public class BuildNumberIncr {
 
 	public static void main(String args[]) {
 		//create an instance
-		//BuildNumberIncr incrementor = new BuildNumberIncr(args[0],args[1]);
-		BuildNumberIncr incrementor = new BuildNumberIncr("C:\\Users\\Mency\\Documents\\version.properties","true");
+		//BuildNumberIncr incrementor = new BuildNumberIncr("1.0_3.0","/home/mencyw/git/BuildXML/version.properties");
+		BuildNumberIncr incrementor = new BuildNumberIncr(args[0],args[1]);
 		//run the example
 		incrementor.runIncrement();
 	}
