@@ -2,16 +2,11 @@ package buildincr;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.*;
-
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 
 public class BuildNumberIncr {
 
@@ -122,7 +117,7 @@ public class BuildNumberIncr {
 	public static void main(String args[]) {
 		//create an instance
 		//BuildNumberIncr incrementor = new BuildNumberIncr(args[0],args[1]);
-		BuildNumberIncr incrementor = new BuildNumberIncr("C:\\Users\\Mency\\Documents\\version.properties","false");
+		BuildNumberIncr incrementor = new BuildNumberIncr("C:\\Users\\Mency\\Documents\\version.properties","true");
 		//run the example
 		incrementor.runIncrement();
 	}
