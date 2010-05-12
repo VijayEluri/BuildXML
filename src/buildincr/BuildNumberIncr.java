@@ -64,9 +64,6 @@ public class BuildNumberIncr {
 		int minorVer;
 		int nightlyVer;
 		int incrVer;
-
-		String oldVersion = strVersion;
-		System.out.print("Old version:" + oldVersion);
 		
 		Pattern patternFullVersion = Pattern.compile("(\\d+).(\\d+).(\\d+).(\\d+)");
 		Matcher matcherFullVersion = patternFullVersion.matcher(strVersion);
@@ -90,7 +87,7 @@ public class BuildNumberIncr {
 		
 		this.fullVersion = new String(majorVer + "." + minorVer + "." + nightlyVer + "." + incrVer);
 
-		System.out.print("Old version:" + oldVersion + "\nNew Version:" + this.fullVersion + "\nNightly Build:" + this.isNightly );
+		System.out.print("Old version:" + strVersion + "\nNew Version:" + this.fullVersion + "\nNightly Build:" + this.isNightly );
 	}
 	
 
