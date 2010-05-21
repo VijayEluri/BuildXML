@@ -235,6 +235,7 @@ public class GitModificationXMLCreator {
 					fileEle.appendChild(filenameEle);				
 					modificationEle.appendChild(fileEle);
 				}
+			}
 				
 		Element dateEle = dom.createElement("date");
 		Text dateText = dom.createTextNode(item.getDate());
