@@ -100,6 +100,9 @@ public class GitModificationXMLCreator {
 
 		Pattern patternExtraNote = Pattern.compile("^(.*:.*?)$");
 		Matcher matcherExtraNote = patternExtraNote.matcher(strLine);
+		
+		Pattern patternMerge = Pattern.compile("^Merge:(.*?)$");
+		Matcher matcherMerge = patternMerge.matcher(strLine);
 
 		if (matcherCommit.find()) {
 			// skip if it is the first element in the group
@@ -127,6 +130,10 @@ public class GitModificationXMLCreator {
 		//	System.out.print("Comment found:"+strComment+"\n");
 		} else if (matcherExtraNote.find()) {			
 		//	System.out.print("ExtraNote found:"+ matcherExtraNote.group(1)+"\n");
+		} else if (matcherMerge.find()) {			
+		//	System.out.print("Merge found:"+ matcherMerge.group(1)+"\n");
+		//  treat merge as file
+			strFile = strFile.concat("  merge commits:" + matcherMerge.group(1));
 		} else  {
 			//assuming file
 			strFile = strFile.concat(strLine);
@@ -191,7 +198,7 @@ public class GitModificationXMLCreator {
 		while(it.hasNext()) {
 			Modification item = (Modification)it.next();
 			//For each Submission object  create <Submission> element and attach it to root
-			Element submissionEle = createSubmissionElement(item);
+			Element submissionEle = createModificationElement(item);
 			rootEle.appendChild(submissionEle);
 		}
 	}
@@ -201,7 +208,7 @@ public class GitModificationXMLCreator {
 	 * @param b The book for which we need to create an xml representation
 	 * @return XML element snippet representing a book
 	 */
-	private Element createSubmissionElement(Modification item){		
+	private Element createModificationElement(Modification item){		
 		
 		Element modificationEle = dom.createElement("modification");
 		modificationEle.setAttribute("type", "git");
@@ -228,8 +235,7 @@ public class GitModificationXMLCreator {
 					fileEle.appendChild(filenameEle);				
 					modificationEle.appendChild(fileEle);
 				}
-			}
-
+				
 		Element dateEle = dom.createElement("date");
 		Text dateText = dom.createTextNode(item.getDate());
 		dateEle.appendChild(dateText);
