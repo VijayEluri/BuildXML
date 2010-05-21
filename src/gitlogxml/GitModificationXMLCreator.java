@@ -101,7 +101,7 @@ public class GitModificationXMLCreator {
 		Pattern patternExtraNote = Pattern.compile("^(.*:.*?)$");
 		Matcher matcherExtraNote = patternExtraNote.matcher(strLine);
 		
-		Pattern patternMerge = Pattern.compile("^Merge:(.*?)$");
+		Pattern patternMerge = Pattern.compile("^Merge:\\s(.*?)$");
 		Matcher matcherMerge = patternMerge.matcher(strLine);
 
 		if (matcherCommit.find()) {
@@ -128,13 +128,13 @@ public class GitModificationXMLCreator {
 		} else if (matcherComment.find()) {
 			strComment = matcherComment.group(1);			
 		//	System.out.print("Comment found:"+strComment+"\n");
-		} else if (matcherExtraNote.find()) {			
-		//	System.out.print("ExtraNote found:"+ matcherExtraNote.group(1)+"\n");
 		} else if (matcherMerge.find()) {			
-		//	System.out.print("Merge found:"+ matcherMerge.group(1)+"\n");
+			System.out.print("Merge found: "+ matcherMerge.group(1)+"\n");
 		//  treat merge as file
 			strFile = strFile.concat("  merge commits:" + matcherMerge.group(1));
-		} else  {
+		} else if (matcherExtraNote.find()) {			
+		//	System.out.print("ExtraNote found:"+ matcherExtraNote.group(1)+"\n");else  
+		} else {
 			//assuming file
 			strFile = strFile.concat(strLine);
 			strFile = strFile.concat(";");
@@ -157,7 +157,7 @@ public class GitModificationXMLCreator {
 //public Submission(String commit,String author, String email, String date, String comment, Vector<String> files) 
 			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, file_vector));
 		} else {
-			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, null));
+			System.out.println("no files?????????????????");
 		}
 
 	}
