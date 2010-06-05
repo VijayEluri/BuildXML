@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<chain>
+	<name>indicee-master</name>
+	<description>partial master branchspec to test XML based fetch</description>
+	<projects>
+		<project name="3pip">
+			<area>3pip</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+		<project name="BuildFramework">
+			<area>BuildFramework</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+		<project name="extractors">
+			<area>Extractors</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+		<project name="indicee-cal-libs">
+			<area>Gluon</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+		<project name="gwt-admin">
+			<area>GWTAdmin</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+		<project name="gwt-common">
+			<area>GwtCommon</area>
+			<branch>master</branch>
+			<timestamp>_latest_</timestamp>
+		</project>
+	</projects>
+</chain>
