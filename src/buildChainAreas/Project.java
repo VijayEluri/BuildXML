@@ -8,21 +8,21 @@ public class Project {
 	
 	private String branch;
 	
-	private String timeStamp;
+	private String tag;
 	
 	public Project() {
 		this.name = null;
 		this.area = null;
 		this.branch = null;
-		this.timeStamp = null;
+		this.tag = null;
 	}
 
 	
-	public Project(String name, String area, String branch, String timeStamp) {
+	public Project(String name, String area, String branch, String tag) {
 		this.name = name;
 		this.area = area;
 		this.branch = branch;
-		this.timeStamp = timeStamp;		
+		this.tag = tag;		
 	}
 
 	public String getName() {
@@ -49,12 +49,12 @@ public class Project {
 		this.branch = branch;
 	}
 
-	public String getTimeStamp() {
-		return timeStamp;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setTimeStamp(String timeStamp) {
-		this.timeStamp = timeStamp;
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
 	public String toString() {
@@ -66,7 +66,7 @@ public class Project {
 		sb.append("\n");
 		sb.append("  Branch:" + getBranch());
 		sb.append("\n");
-		sb.append("  Time Stamp:" + getTimeStamp());
+		sb.append("  Tag:" + getTag());
 		sb.append("\n");		
 		return sb.toString();
 	}

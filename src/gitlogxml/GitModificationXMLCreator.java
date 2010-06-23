@@ -71,11 +71,11 @@ public class GitModificationXMLCreator {
 		      // Print the content on the console
 		    	if (strLine.length() > 0) {
 			      //System.out.println ("\tNew Read Line:"+strLine);
-			      prepareData(strLine);		      
+			      prepareData(strLine,filePath);		      
 		    	}
 		    }	
 		    //after parsing file, call loadData one last time for the last instance
-		    loadData();
+		    loadData(filePath);
 		    //Close the input stream
 		    in.close();
 		    }catch (Exception e){//Catch exception if any
@@ -84,7 +84,7 @@ public class GitModificationXMLCreator {
 	}
 	
 	
-	private void prepareData(String strLine){
+	private void prepareData(String strLine, String filePath){
 		
 		Pattern patternCommit = Pattern.compile("^commit\\s(..........).*$");
 		Matcher matcherCommit = patternCommit.matcher(strLine);
@@ -107,7 +107,7 @@ public class GitModificationXMLCreator {
 		if (matcherCommit.find()) {
 			// skip if it is the first element in the group
 			if (strComment.isEmpty() != true) {
-				loadData();
+				loadData(filePath);
 			}
 		    strCommit = matcherCommit.group(1);
 			//when the line is commit -- prepare for new entry
@@ -146,7 +146,7 @@ public class GitModificationXMLCreator {
 	 * Add a list of books to the list
 	 * In a production system you might populate the list from a DB
 	 */
-	private void loadData(){
+	private void loadData(String filePath){
 		
 		String[] file_array;
 		Vector<String> file_vector;
@@ -157,9 +157,14 @@ public class GitModificationXMLCreator {
 //public Submission(String commit,String author, String email, String date, String comment, Vector<String> files) 
 			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, file_vector));
 		} else {
-			System.out.println("no files?????????????????");
+			Pattern patternProject = Pattern.compile("^(.*)/(.*)/.*$");
+			Matcher matcherProject = patternProject.matcher(filePath);
+			if (matcherProject.find()) {
+				System.out.print("no changes detected for project " + matcherProject.group(2) +"\n" );
+			} else {
+				System.out.println("no changed detected for current project");
+			}					
 		}
-
 	}
 
 	/**
@@ -295,10 +300,8 @@ public class GitModificationXMLCreator {
 	}
 
 	public void runCreator(String outputXML){
-		System.out.println("Started .. ");
 		createDOMTree();
 		printToFile(outputXML);
-		System.out.println("Generated file successfully.");
 	}
 
 	
@@ -308,8 +311,6 @@ public class GitModificationXMLCreator {
 			System.out.println("Need argument on input and output. Abort");
 			System.exit(-1);
 		}
-		String userTimezone = System.getProperty("user.timezone");
-		System.out.println("user.timezone is"+userTimezone);
 		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString());
 		
 		creator.runCreator(args[1].toString());

@@ -1,7 +1,5 @@
 package buildChainAreas;
 
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,21 +22,18 @@ public class loadProjectList extends DefaultHandler {
 	
 	private String tmpVal;
 	
-
 	
 	public void runLoad() {
 		parseXML();
 		printData();
 	}
 	
-	
 	public loadProjectList() {
 		chainProjectList = new ArrayList<Project>();
 	}
 	
 	private void parseXML() {
-	
-		//get a factory
+			//get a factory
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		try {
 		
@@ -80,6 +75,8 @@ public class loadProjectList extends DefaultHandler {
 				// else git clone git@github.com:indicee/$area.git
 				// cd $area; git checkout $branch
 				//String command="git pull".concat();
+				// Process	exec(String command, String[] envp, File dir) 
+		        //  Executes the specified string command in a separate process with the specified environment and working directory.
 				String command="";
 				Runtime.getRuntime().exec(command);
 			} catch (IOException e) {
@@ -116,8 +113,11 @@ public class loadProjectList extends DefaultHandler {
 			tmpProject.setArea(tmpVal);
 		}else if (qName.equalsIgnoreCase("branch")) {
 			tmpProject.setBranch(tmpVal);		
-		}else if (qName.equalsIgnoreCase("timestamp")) {
-			tmpProject.setTimeStamp(tmpVal);
+		}else if (qName.equalsIgnoreCase("tag")) {
+			tmpProject.setTag(tmpVal);
+			if (tmpVal.equalsIgnoreCase(new String("latest")) || tmpVal.length() == 0) {
+				tmpProject.setTag(new String("none"));
+			}			
 		}
 	}
 
