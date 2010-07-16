@@ -22,6 +22,7 @@ public class GitModificationXMLCreator {
 
 	List<Modification> myData;
 	String filePath;
+	String repo;
 	Document dom;
 
 	private String strCommit;
@@ -32,7 +33,10 @@ public class GitModificationXMLCreator {
 	private String strDate;
 	
 	
-	public GitModificationXMLCreator(String filePath) {
+	
+	public GitModificationXMLCreator(String repo, String filePath) {
+		this.repo= repo;
+		
 		//create a list to hold the data
 		this.filePath=filePath;
 		myData = new ArrayList<Modification>();
@@ -43,7 +47,7 @@ public class GitModificationXMLCreator {
 		strComment = new String();
 		strFile = new String();
 		strDate = new String();
-		
+			
 		//initialize the list
 		loadFile(filePath);
 		
@@ -143,8 +147,7 @@ public class GitModificationXMLCreator {
 	}
 	
 	/**
-	 * Add a list of books to the list
-	 * In a production system you might populate the list from a DB
+	 * Add a list of modifications to the list
 	 */
 	private void loadData(String filePath){
 		
@@ -154,16 +157,10 @@ public class GitModificationXMLCreator {
 		if (strFile.length() > 0) {
 			file_array = strFile.split(";");
 			file_vector = new Vector<String>(Arrays.asList(file_array));
-//public Submission(String commit,String author, String email, String date, String comment, Vector<String> files) 
+//public Modification(String commit,String author, String email, String date, String comment, Vector<String> files)
 			myData.add(new Modification(strCommit, strAuthor, strEmail, strDate, strComment, file_vector));
 		} else {
-			Pattern patternProject = Pattern.compile("^(.*)/(.*)/.*$");
-			Matcher matcherProject = patternProject.matcher(filePath);
-			if (matcherProject.find()) {
-				System.out.print("no changes detected for project " + matcherProject.group(2) +"\n" );
-			} else {
-				System.out.println("no changed detected for current project");
-			}					
+			System.out.print("no changes detected for project " + repo +"\n" );
 		}
 	}
 
@@ -241,7 +238,12 @@ public class GitModificationXMLCreator {
 					modificationEle.appendChild(fileEle);
 				}
 			}
-				
+
+		Element repoEle = dom.createElement("repo");
+		Text repoText = dom.createTextNode(repo);
+		repoEle.appendChild(repoText);
+		modificationEle.appendChild(repoEle);
+			
 		Element dateEle = dom.createElement("date");
 		Text dateText = dom.createTextNode(item.getDate());
 		dateEle.appendChild(dateText);
@@ -307,13 +309,15 @@ public class GitModificationXMLCreator {
 	
 	public static void main(String args[]) {
 		//create an instance
-		if (args.length < 2) {
+		if (args.length < 3) {
 			System.out.println("Need argument on input and output. Abort");
 			System.exit(-1);
 		}
-		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString());
+		GitModificationXMLCreator creator = new GitModificationXMLCreator(args[0].toString(),args[1].toString());
 		
-		creator.runCreator(args[1].toString());
+		creator.runCreator(args[2].toString());
+		
+		
 	}
 }
 
