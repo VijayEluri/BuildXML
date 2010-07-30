@@ -1,36 +1,23 @@
 package buildChainAreas;
 
-public class Project {
-	
-	private String name;
+public class Component {
 	
 	private String area;
-	
 	private String branch;
-	
 	private String tag;
+	private String tooling = new String("false");
+	private String testing = new String("false");
 	
-	public Project() {
-		this.name = null;
+	public Component() {
 		this.area = null;
 		this.branch = null;
 		this.tag = null;
 	}
 
-	
-	public Project(String name, String area, String branch, String tag) {
-		this.name = name;
+	public Component(String area, String branch, String tag) {
 		this.area = area;
 		this.branch = branch;
 		this.tag = tag;		
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	public String getArea() {
@@ -56,18 +43,44 @@ public class Project {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
+
+	public String getTooling() {
+		return tooling;
+	}
+
+	public void setTooling(String tooling) {
+		this.tooling = tooling;
+	}
+
+	public String getTesting() {
+		return testing;
+	}
+
+	public void setTesting(String testing) {
+		this.testing = testing;
+	}
+
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Project Details --\n");
-		sb.append("  Name:" + getName());
-		sb.append("\n");
 		sb.append("  Area:" + getArea());
 		sb.append("\n");
 		sb.append("  Branch:" + getBranch());
 		sb.append("\n");
 		sb.append("  Tag:" + getTag());
+		sb.append("\n");
+		sb.append("  Tooling:" + getTooling());
+		sb.append("\n");
+		sb.append("  Testing:" + getTesting());
 		sb.append("\n");		
+		return sb.toString();
+	}
+	
+
+	public String toFile() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getArea() + "|" + getBranch() + "|" + getTag() + "|" + getTooling() + "|" + getTesting());
 		return sb.toString();
 	}
 }

@@ -1,0 +1,4 @@
+Areas_to_build=Extractors,PhoenixApp,BuildFramework,
+Extractors|master|greatest|false|false
+PhoenixApp|ivy|latest|false|false
+BuildFramework|ivy|latest|true|false

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build>
+  <name>test-build</name>
+  <description>test build with release.xml</description>
+  <workspace>${HOME}/Documents/git</workspace>
+  <components>
+<!--
+	<component>
+		<area>_git_area_</area>
+		<branch>_git_branch_default:master</branch>
+		<tag>_git_tag_default:latest</tag>
+		<tooling>_true_if_this_is_a_tools_area_default:false</tooling>
+		<testing>_true_if_this_is_a_testing_area_default:false</testing>
+	</component>
+-->
+	<component>
+		<area>Extractors</area>
+		<tag>greatest</tag>
+	</component>
+	<component>
+		<area>PhoenixApp</area>
+		<branch>ivy</branch>
+	</component>
+	<component>
+		<area>BuildFramework</area>
+		<branch>ivy</branch>
+		<tooling>true</tooling>
+	</component>
+  </components>
+</build>
